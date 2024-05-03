@@ -1,19 +1,24 @@
 # Secrets configuration
-{inputs, ...}: {
+{
+  config,
+  inputs,
+  ...
+}: {
   imports = [
-    # Import sops module
+    # Import sops modules
     inputs.sops-nix.nixosModules.sops
   ];
 
   sops = {
     age = {
       # age private keys should be stored at this path on the host
-      keyFile = "/var/lib/sops/age/keys.txt";
+      keyFile = config.constants.secrets.sops.age.file;
 
       # This is needed so that ssh keys are not unnecessarily picked up
       sshKeyPaths = [];
     };
 
+    # Store encrypted secrets in this file in the repository
     defaultSopsFile = ./secrets.yaml;
 
     gnupg = {

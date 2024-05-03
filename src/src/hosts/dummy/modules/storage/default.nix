@@ -1,33 +1,79 @@
 # Storage configuration
-{config, ...}: {
-  fileSystems = {
-    "/" = {
-      device = "/dev/disk/by-label/${config.constants.disk.partitions.main.label}";
+{
+  config,
+  inputs,
+  ...
+}: {
+  imports = [
+    # Import Disko modules
+    inputs.disko.nixosModules.disko
+  ];
 
-      # use ext4 for root
-      fsType = "ext4";
-    };
+  disko = {
+    devices = {
+      disk = {
+        main = {
+          content = {
+            partitions = {
+              boot = {
+                content = {
+                  # Format the partition as FAT
+                  format = "vfat";
 
-    "/boot" = {
-      device = "/dev/disk/by-label/${config.constants.disk.partitions.boot.label}";
+                  # Mount the partition at /boot
+                  mountpoint = "/boot";
 
-      # /boot uses FAT32, but mount only recognizes vfat type
-      fsType = "vfat";
+                  # This partition contains a filesystem
+                  type = "filesystem";
+                };
 
-      # Obviously
-      neededForBoot = true;
+                # Size of the boot partition
+                size = "1G";
+
+                # EFI system partition
+                type = "EF00";
+              };
+
+              main = {
+                content = {
+                  # Format the partition as ext4
+                  format = "ext4";
+
+                  # Mount the partition at /
+                  mountpoint = "/";
+
+                  # This partition contains a filesystem
+                  type = "filesystem";
+                };
+
+                # Use the rest of the disk for the main partition
+                size = "100%";
+
+                # Linux filesystem partition
+                type = "8300";
+              };
+            };
+
+            # Use GPT partition table
+            type = "gpt";
+          };
+
+          device = config.constants.storage.disks.main.device;
+          type = "disk";
+        };
+      };
     };
   };
 
-  services = {
-    smartd = {
-      # Enable smartmontools daemon
-      enable = true;
+  fileSystems = {
+    "/boot" = {
+      # Obviously
+      neededForBoot = true;
+    };
 
-      extraOptions = [
-        # This prevents smartd from failing if no SMART capable devices are found (like in a VM)
-        "-q never"
-      ];
+    "/" = {
+      # Contains data needed for booting
+      neededForBoot = true;
     };
   };
 }
