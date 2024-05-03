@@ -1,19 +1,10 @@
 {
   imports = [
-    ./appearance
     ./boot
     ./constants
-    ./hardware
     ./install
-    ./locales
-    ./misc
     ./network
     ./nix
-    ./performance
-    ./secrets
-    ./security
-    ./shell
-    ./ssh
     ./storage
     ./users
     ./vm
