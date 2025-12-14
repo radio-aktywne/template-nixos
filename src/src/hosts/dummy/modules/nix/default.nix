@@ -19,6 +19,6 @@
 
   system = {
     # Keep this value as the NixOS version used during first installation
-    stateVersion = "23.11";
+    stateVersion = "25.05";
   };
 }

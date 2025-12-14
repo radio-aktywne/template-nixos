@@ -14,8 +14,9 @@ NixOS configs template ❄️
 ## 💡 About
 
 This repository contains a [`copier`](https://copier.readthedocs.io) template
-that can be used to create [`NixOS`](https://nixos.org) configurations for
-[`radio-aktywne`](https://github.com/radio-aktywne).
+that can be used to create projects containing
+[`NixOS`](https://nixos.org) configurations
+for [`radio-aktywne`](https://github.com/radio-aktywne).
 
 ## 📜 Usage
 
